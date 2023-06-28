@@ -147,6 +147,19 @@ const UserProfile = () => {
           <button className={styles["user-profile__button"]} onClick={saveProfile}>Save</button>
           <br />
           <button className={styles["user-profile__button"]} onClick={() => setIsEditing(false)}>Cancel</button>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
         </div>
       ) : (
         <>
@@ -187,6 +200,8 @@ const UserProfile = () => {
           }
         </>
       )}
+      <br />
+      <br />
     </div>
   );
 };
