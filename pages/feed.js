@@ -13,6 +13,7 @@ const FeedPage = () => {
   const [quotes, setQuotes] = useState([]);
   const [user, setUser] = useState(null);
   const [displayName, setDisplayName] = useState('');
+  const [loading, setLoading] = useState(true); // Loading state
   const router = useRouter();
   const auth = getAuth();
 
@@ -30,9 +31,11 @@ const FeedPage = () => {
         setUser(authUser);
         const userDoc = await getDoc(doc(db, 'users', authUser.uid));
         setDisplayName(userDoc.data().displayName || authUser.email);
+        setLoading(false); // Set loading to false when user data is fetched
       } else {
         setUser(null);
         setDisplayName('');
+        setLoading(false); // Set loading to false when no user is authenticated
       }
     });
 
@@ -50,6 +53,11 @@ const FeedPage = () => {
     } else {
       router.push('/user');
     }
+  }
+
+  // If loading, return a loading message or a loader component
+  if (loading) {
+    return <div>Loading...</div>; 
   }
 
   return (
