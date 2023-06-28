@@ -31,7 +31,7 @@ const UserProfile = () => {
         setUser(userData);
         if (userData) {
           setDisplayName(userData.displayName || '');
-          setCurrentPhotoURL(userData.photoURL || '');
+          setCurrentPhotoURL(userData.photoURL || 'https://firebasestorage.googleapis.com/v0/b/quoted-e0fdc.appspot.com/o/users%2Favatar-default-symbolic-icon-512x488-rddkk3u9.png?alt=media&token=1c913071-b177-4822-ab6e-9d810578fb6c');
           setBirthday(userData.birthday || '');
           setBio(userData.bio || '');
         }
@@ -97,6 +97,8 @@ const UserProfile = () => {
         });
         setCurrentPhotoURL(updatedPhotoURL);
         setNewPhotoURL('');
+      } else if(!currentPhotoURL) {
+        updatedPhotoURL = 'https://firebasestorage.googleapis.com/v0/b/quoted-e0fdc.appspot.com/o/users%2Favatar-default-symbolic-icon-512x488-rddkk3u9.png?alt=media&token=1c913071-b177-4822-ab6e-9d810578fb6c'; // Default photo URL if there's no file to upload
       }
 
       const userDocRef = doc(db, 'users', currentUser.uid);
@@ -108,7 +110,7 @@ const UserProfile = () => {
       });
       setIsEditing(false);
     }
-  };
+};
 
   return (
     <div className={styles["user-profile"]}>
