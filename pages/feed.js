@@ -1,10 +1,7 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import Feed from '../components/Feed';
 import { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { getDocs, collection, doc, getDoc } from 'firebase/firestore';
-import Quote from '../components/Quote';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import styles from '../styles/FeedDrop.module.css';
@@ -16,7 +13,6 @@ const FeedPage = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const router = useRouter();
   const auth = getAuth();
-      
 
   const currentUser = auth.currentUser;
 
@@ -65,9 +61,9 @@ const FeedPage = () => {
     <div className={styles.background}>
       <div className={styles.headbar}>
         {user && <h2>Hey, {displayName}</h2>} 
-        <div className={styles.headbar_buttons}>
-        <button onClick={goToProfile}><FontAwesomeIcon icon={faUser} /></button> &nbsp;
-        <button onClick={handleLogout}><FontAwesomeIcon icon={faSignOutAlt} /></button> 
+        <div className={styles.headbar_buttons}> 
+        <button onClick={goToProfile}><img src="/user.png" alt="User" width="20px" height="20px" /></button> &nbsp;
+        <button onClick={handleLogout}><img src="/logout.png" alt="Logout" width="20px" height="20px" /></button> 
         </div>
       </div>
       <Feed />
