@@ -16,6 +16,7 @@ const FeedPage = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const router = useRouter();
   const auth = getAuth();
+      
 
   const currentUser = auth.currentUser;
 
