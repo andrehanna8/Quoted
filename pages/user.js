@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doc, getDoc, updateDoc, query, collection, where, onSnapshot, getDocs, FieldPath } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, where, onSnapshot, collection, query } from 'firebase/firestore';
 import { db, auth, storage } from '../firebase';
 import { useRouter } from 'next/router';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -8,10 +8,12 @@ import styles from '../styles/UserProfile.module.css';
 import Link from 'next/link';
 import Quote from '../components/Quote';
 
+
 const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [displayName, setDisplayName] = useState('');
-  const [photoURL, setPhotoURL] = useState('');
+  const [currentPhotoURL, setCurrentPhotoURL] = useState(''); 
+  const [newPhotoURL, setNewPhotoURL] = useState(''); 
   const [birthday, setBirthday] = useState('');
   const [bio, setBio] = useState('');
   const [file, setFile] = useState(null);
@@ -29,13 +31,13 @@ const UserProfile = () => {
         setUser(userData);
         if (userData) {
           setDisplayName(userData.displayName || '');
-          setPhotoURL(userData.photoURL || '');
+          setCurrentPhotoURL(userData.photoURL || '');
           setBirthday(userData.birthday || '');
           setBio(userData.bio || '');
         }
       }
     };
-  
+
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         fetchUser(authUser);
@@ -43,13 +45,12 @@ const UserProfile = () => {
         const quotesUnsubscribe = onSnapshot(q, (snapshot) => {
           setQuotes(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})));
         });
-  
+
         const qLiked = query(collection(db, 'quotes'), where('likedBy', 'array-contains', authUser.uid));
         const likedQuotesUnsubscribe = onSnapshot(qLiked, (snapshot) => {
           setLikedQuotes(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})));
         });
-  
-        // Return a cleanup function to unsubscribe from both listeners
+
         return () => {
           unsubscribe();
           quotesUnsubscribe();
@@ -59,10 +60,15 @@ const UserProfile = () => {
         return unsubscribe;
       }
     });
-  }, [photoURL, displayName, birthday, bio, file, likedQuotes]);
-  
+  }, [displayName, birthday, bio, file, likedQuotes]);
+
   const handleFileChange = (e) => {
     if (e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setNewPhotoURL(reader.result);
+      };
+      reader.readAsDataURL(e.target.files[0]);
       setFile(e.target.files[0]);
     }
   };
@@ -70,7 +76,7 @@ const UserProfile = () => {
   const saveProfile = async () => {
     const currentUser = auth.currentUser;
     if (currentUser) {
-      let updatedPhotoURL = photoURL;
+      let updatedPhotoURL = currentPhotoURL;
       if (file) {
         const storageRef = ref(storage, `users/${currentUser.uid}/${file.name}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
@@ -89,6 +95,8 @@ const UserProfile = () => {
             }
           );
         });
+        setCurrentPhotoURL(updatedPhotoURL);
+        setNewPhotoURL('');
       }
 
       const userDocRef = doc(db, 'users', currentUser.uid);
@@ -98,7 +106,6 @@ const UserProfile = () => {
         birthday,
         bio,
       });
-      setFile(null);
       setIsEditing(false);
     }
   };
@@ -113,7 +120,12 @@ const UserProfile = () => {
         <div className={styles["user-profile__form"]}>
           <p className={styles.profileText}>Upload Profile Pic:</p>
           <input className={styles["user-profile__input"]} type="file" onChange={handleFileChange} />
-          {file && <p>{file.name}</p>}
+          {newPhotoURL ? (
+            <img src={newPhotoURL} alt="Preview" style={{ maxHeight: "150px", maxWidth: "fit-content"}} />
+          ) : (
+            currentPhotoURL && <img src={currentPhotoURL} alt="Profile" className={styles["user-profile__photo"]} />
+          )}
+
           <p className={styles.profileText}>Display Name:</p>
           <input
             className={styles["user-profile__input"]}
@@ -132,7 +144,6 @@ const UserProfile = () => {
           />
           <p className={styles.profileText}>Bio:</p>
           <textarea
-           
             className={styles["user-profile__input"]}
             placeholder="Bio"
             value={bio}
@@ -142,30 +153,17 @@ const UserProfile = () => {
           <br />
           <button className={styles["user-profile__button"]} onClick={() => setIsEditing(false)}>Cancel</button>
           <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
         </div>
       ) : (
         <>
-          {photoURL && (
+          {currentPhotoURL && (
             <div className={styles["user-profile__photo-container"]}>
-              <img src={photoURL} alt="Profile" className={styles["user-profile__photo"]} />
+              <img src={currentPhotoURL} alt="Profile" className={styles["user-profile__photo"]} />
             </div>
           )}
           <h1 className={styles.profileText}>{displayName}</h1>
           <p className={styles.profileText}>{bio}</p>
           <button className={styles["user-profile__button"]} onClick={() => setIsEditing(true)}>Edit Profile</button>
-
           <div className={styles.tabs}>
             <button
               className={selectedTab === 'myQuotes' ? styles.selectedTab : ''}
@@ -180,13 +178,11 @@ const UserProfile = () => {
               Liked Quotes
             </button>
           </div>
-
           {selectedTab === 'myQuotes' &&
             quotes.map((quote) => (
               <Quote key={quote.id} quote={quote} />
             ))
           }
-
           {selectedTab === 'likedQuotes' &&
             likedQuotes.map((quote) => (
               <Quote key={quote.id} quote={quote} />
