@@ -9,7 +9,9 @@ const Form = ({ handleSwitch, heading, buttonText, switchText, switchButtonText 
       <h2 className={styles.heading}>{heading}</h2>
       <form className={styles.form}>
         <input className={styles.input} type="email" placeholder="Email" />
-        <input className={styles.input} type="password" placeholder="Password" />
+        <br />
+        <input className={styles.input} type="password" placeholder="Password" /> 
+        <br></br>
         <button className={styles.submit} type="submit">{buttonText}</button>
       </form>
       <p className={styles.switchText}>

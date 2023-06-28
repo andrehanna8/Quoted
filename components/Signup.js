@@ -23,7 +23,11 @@ const Signup = ({ onSwitch }) => {
       <h2>Sign Up</h2>
       <form onSubmit={handleSignup}>
         <input className={styles.input} type="email" name="email" placeholder="Email" required />
+        <br />
+        <br />
         <input className={styles.input} type="password" name="password" placeholder="Password" required />
+        <br />
+        <br />
         <button className={styles.submit} type="submit">Sign Up</button>
       </form>
       <button onClick={onSwitch}>Already have an account? Login.</button>
