@@ -24,7 +24,7 @@ const Quote = ({ quote }) => {
     if (currentUser && quote.likedBy) {
       setUserHasLiked(quote.likedBy.includes(currentUser.uid));
     }
-  }, [quote]);
+  }, [quote ]);
 
   const deleteQuote = async () => {
     await deleteDoc(doc(db, 'quotes', quote.id));
@@ -65,6 +65,7 @@ const Quote = ({ quote }) => {
 
   return (
     <div className={styles.quoteContainer}>
+      {/* {console.log(quote)} */}
       <img src={profilePic} alt={quote.author} className={styles.profilePic}/>
       <div className={styles.textContainer}>
         <h2 className={styles.author}>{quote.author}</h2>

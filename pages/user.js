@@ -60,7 +60,7 @@ const UserProfile = () => {
         return unsubscribe;
       }
     });
-  }, [displayName, birthday, bio, file, likedQuotes]);
+  }, []);
 
   const handleFileChange = (e) => {
     if (e.target.files[0]) {
