@@ -38,7 +38,7 @@ function Feed() {
       createdAt: serverTimestamp(),
     });
 
-    setContent("");  // Reset the content state after adding a quote
+    setContent("");  
   };
 
   return (

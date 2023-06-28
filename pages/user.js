@@ -35,7 +35,7 @@ const UserProfile = () => {
         }
       }
     };
-
+  
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         fetchUser(authUser);
@@ -43,30 +43,24 @@ const UserProfile = () => {
         const quotesUnsubscribe = onSnapshot(q, (snapshot) => {
           setQuotes(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})));
         });
-
-        const qLiked = query(collection(db, 'likes'), where('userId', '==', authUser.uid));
-        const likesUnsubscribe = onSnapshot(qLiked, (snapshot) => {
-          const quoteIds = snapshot.docs.map((doc) => doc.data().quoteId);
-          const fetchQuotes = async () => {
-            const quotesSnapshot = await getDocs(query(collection(db, 'quotes'), where('__name__', 'in', quoteIds)));
-
-            setLikedQuotes(quotesSnapshot.docs.map((doc) => ({...doc.data(), id: doc.id})));
-          }
-          fetchQuotes();
+  
+        const qLiked = query(collection(db, 'quotes'), where('likedBy', 'array-contains', authUser.uid));
+        const likedQuotesUnsubscribe = onSnapshot(qLiked, (snapshot) => {
+          setLikedQuotes(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})));
         });
-
+  
         // Return a cleanup function to unsubscribe from both listeners
         return () => {
           unsubscribe();
           quotesUnsubscribe();
-          likesUnsubscribe();
+          likedQuotesUnsubscribe();
         }
       } else {
         return unsubscribe;
       }
     });
-  }, [photoURL, displayName, birthday, bio, file]);
-
+  }, [photoURL, displayName, birthday, bio, file, likedQuotes]);
+  
   const handleFileChange = (e) => {
     if (e.target.files[0]) {
       setFile(e.target.files[0]);

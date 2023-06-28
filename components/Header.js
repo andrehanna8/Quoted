@@ -8,8 +8,6 @@ const Header = () => {
           <li>
             <a href="/">Home</a>
           </li>
-          {/* add logic here to only show login and signup links if user is not logged in, 
-              and to show logout link if user is logged in */}
           <li>
             <a href="/login">Login</a>
           </li>

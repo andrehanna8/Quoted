@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 const Login = ({ onSwitch }) => {
   const router = useRouter();
-  const [error, setError] = useState(null); // Add state for error
+  const [error, setError] = useState(null); 
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -16,14 +16,13 @@ const Login = ({ onSwitch }) => {
       router.push('/feed');
     } catch (error) {
       console.error("Error logging in: ", error);
-      setError(error.message); // Set error state
+      setError(error.message); 
     }
   };
 
   return (
     <div className={styles.form}>
       <h2>Login</h2>
-      {/* Add error banner */}
       {error && (
         <div className={styles.errorBanner}>
           {error}
