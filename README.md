@@ -1,5 +1,7 @@
 Live Site: [Quoted](https://creative-shortbread-cb498b.netlify.app/)
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/1d8db880-48b8-4297-bc78-8081a66320f8/deploy-status)](https://app.netlify.com/sites/creative-shortbread-cb498b/deploys)
+
 # Quoted: A Quote Sharing Web App
 
 Quoted is a web application built with Next.js and Firebase. It's a platform where users can share their favorite quotes with others, view quotes from different users, and like the ones that inspire them.
