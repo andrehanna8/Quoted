@@ -1,0 +1,35 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    background-color: #252525; /* same dark gray as modalContent */
+    border: 1px solid #555; /* darker border color */
+    padding: 20px;
+    border-radius: 5px; /* rounded corners */
+  }
+  
+  .input {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #aaa; /* light gray border for contrast */
+    background-color: #333; /* darker input background for contrast */
+    color: #fff; /* white text */
+  }
+  
+  .submit {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
+    color: #fff; /* white color for button text */
+    background-color: #0070f3;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* smooth background color transition */
+  }
+  
+  .submit:hover {
+    background-color: #0056b3;
+  }
+  

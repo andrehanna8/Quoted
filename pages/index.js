@@ -1,115 +1,97 @@
-import Head from 'next/head';
+import React, { useState, useEffect } from "react";
+import { db, storage } from "../firebase";
+import { getDocs, collection } from "firebase/firestore";
 import styles from '../styles/Home.module.css';
+import Quote from '../components/Quote';
+import Head from 'next/head';
+import Login from '../components/Login';
+import Signup from '../components/Signup';
+import Modal from '../components/Modal';
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 export default function Home() {
+  const [quotes, setQuotes] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+
+  useEffect(() => {
+    const getQuotes = async () => {
+      const querySnapshot = await getDocs(collection(db, 'quotes'));
+      setQuotes(querySnapshot.docs.map(doc => ({...doc.data(), id: doc.id})));
+    };
+    getQuotes();
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentQuoteIndex((prevIndex) => (prevIndex + 1) % quotes.length);
+    }, 2750); // Changed to 1.5 seconds
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [quotes]);
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>"Quoted"</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+      <header className={styles.header}>
+      <h1 className={styles.description}> Welcome to Quoted!</h1>
+        <div className={styles.description}>
+        <button onClick={() => {setShowModal(true); setIsLogin(true);}}>Login</button>
+        <button onClick={() => {setShowModal(true); setIsLogin(false);}}>Sign Up</button>
+        </div>
+      </header>
+
+      {showModal && (
+        <Modal onClose={() => setShowModal(false)}>
+          {isLogin ? (
+            <Login onSwitch={() => setIsLogin(false)} />
+          ) : (
+            <Signup onSwitch={() => setIsLogin(true)} />
+          )}
+        </Modal>
+      )}
+
+      <main className={styles.main}>
+       
 
         <p className={styles.description}>
-          Get started by editing <code>pages/index.js</code>
+          Explore a universe of quotes. Share your favorites and discover new ones.
         </p>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div className={styles.quoteContainer}>
+          <TransitionGroup>
+            {quotes.map((quote, index) => {
+              const isActive = index === currentQuoteIndex;
+              const isPrev = (index === currentQuoteIndex - 1) || (currentQuoteIndex === 0 && index === quotes.length - 1);
+              const isNext = (index === currentQuoteIndex + 1) || (currentQuoteIndex === quotes.length - 1 && index === 0);
+              return (
+                <CSSTransition
+                  in={isActive}
+                  timeout={1000}
+                  classNames="quote"
+                  unmountOnExit
+                  key={index}
+                >
+                  <div className={`${styles.quote} ${isActive ? styles.active : isPrev ? styles.prev : isNext ? styles.next : styles.hidden}`}>
+                    <Quote quote={quote} />
+                  </div>
+                </CSSTransition>
+              );
+            })}
+          </TransitionGroup>
         </div>
       </main>
 
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel" className={styles.logo} />
-        </a>
+      <footer className={styles.footer}>
+
       </footer>
-
-      <style jsx>{`
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        footer img {
-          margin-left: 0.5rem;
-        }
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          text-decoration: none;
-          color: inherit;
-        }
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-            DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-        }
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
     </div>
-  )
+  );
 }
