@@ -45,7 +45,7 @@ The app is built using the Next.js framework, a powerful tool for developing mod
 
 ## Mobile-First Approach
 
-Quoted is designed with a mobile-first approach. It is fully mobile-responsive, ensuring that users on all kinds of devices can access and use the app seamlessly. If time allows, desktop-responsive designs are also added to cater to users on larger screens.
+Quoted is designed with a mobile-first approach. It is fully mobile-responsive, ensuring that users on all kinds of devices can access and use the app seamlessly.
 
 ## Creativity and Freedom
 
