@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db, auth } from '../firebase';
 import { doc, deleteDoc, setDoc, getDoc, collection, onSnapshot, query } from 'firebase/firestore';
-import styles from '../styles/Quote.module.css'; 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import styles from '../styles/Quote.module.css';
 
 const Quote = ({ quote }) => {
   const [editMode, setEditMode] = useState(false);
@@ -96,7 +94,7 @@ const Quote = ({ quote }) => {
           <span>{likes.length}</span>
           
           <button onClick={toggleLike} className={userHasLiked ? styles.likeButtonActive : styles.likeButton}>
-            <FontAwesomeIcon icon={faHeart} />
+            <img src="/heart.png" alt="Heart" width="15px" height="15px"  />
           </button>
         </div>
 
