@@ -1,4 +1,5 @@
-Live Site: [Quoted](https://creative-shortbread-cb498b.netlify.app/){:target="_blank"}
+Live Site: <a href="https://creative-shortbread-cb498b.netlify.app/" target="_blank">Quoted</a>
+
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/1d8db880-48b8-4297-bc78-8081a66320f8/deploy-status)](https://app.netlify.com/sites/creative-shortbread-cb498b/deploys)
 
