@@ -1,5 +1,4 @@
 Live Site: [Quoted](https://creative-shortbread-cb498b.netlify.app/)
-Backup Link: [Quoted Backup](https://649be93289bec649a780e4e1--creative-shortbread-cb498b.netlify.app/)
 
 # Quoted: A Quote Sharing Web App
 
