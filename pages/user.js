@@ -65,7 +65,7 @@ const UserProfile = () => {
         return unsubscribe;
       }
     });
-  }, []);
+  }, [photoURL, displayName, birthday, bio, file]);
 
   const handleFileChange = (e) => {
     if (e.target.files[0]) {
